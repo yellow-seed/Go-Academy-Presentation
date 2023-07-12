@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: training
+    ports:
+      - 3306:3306
+    networks:
+        - external
+
+  ngrok:
+      image: ngrok/ngrok:latest
+      restart: unless-stopped
+      command:
+        - "start"
+        - "--all"
+        - "--config"
+        - "/etc/ngrok.yml"
+      volumes:
+        - ./ngrok.yml:/etc/ngrok.yml
+      ports:
+        - 4040:4040
+      networks:
+        - external
+
+networks:
+  external:
+    driver: bridge
+    internal: false
+    name: go-academy

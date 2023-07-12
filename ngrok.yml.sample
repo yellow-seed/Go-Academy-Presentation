@@ -1,0 +1,10 @@
+version: "2"
+authtoken: your_auth_token
+console_ui: true   # コンソールUIを有効にするかどうか
+web_addr: localhost:4040
+
+tunnels:
+  app:
+    addr: 3000   # 公開したいローカルのポート番号
+    proto: http   # 使用するプロトコル (http, https, tcp, tls のいずれか)
+    # host_header: localhost:3000   # ホストヘッダーを指定する場合はここに記述
