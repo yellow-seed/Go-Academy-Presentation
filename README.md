@@ -10,7 +10,7 @@ https://kakakakakku.hatenablog.com/entry/2022/09/26/131311
 
 マイグレーションファイル作成
 ```sh
-migrate create --ext sql --dir db/migrate --seq user
+migrate create --ext sql --dir db/migrate --seq users
 ```
 
 マイグレーション実行

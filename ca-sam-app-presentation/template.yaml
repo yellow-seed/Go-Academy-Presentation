@@ -106,6 +106,28 @@ Resources:
           DB_NAME: !Ref DB_NAME
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
+  GarbageItemFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: garbageitem/
+      Handler: garbageitem
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /garbageitem
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
   # ScheduleFunction:
   #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   #   Properties:

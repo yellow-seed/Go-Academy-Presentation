@@ -117,6 +117,33 @@ Resources:
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: MasterGarbageFunction
+  GarbageItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GarbageItemFunction
+      Handler: garbageitem
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /garbageitem
+            Method: POST
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: GarbageItemFunction
 Outputs:
   HelloWorldFunction:
     Description: First Lambda Function ARN

@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS 'garbage_item_details';

@@ -41,4 +41,14 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["MasterUserFunction"]
 
+[function_build_definitions.247d0a6c-0816-4e28-987f-ccf634c2c32c]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/garbageitem"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "garbageitem"
+source_hash = "152b9bffb90f6c8f9eb00fbc6ab390c02abace8153d82a1e117aed9b54ef2dd1"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GarbageItemFunction"]
+
 [layer_build_definitions]
