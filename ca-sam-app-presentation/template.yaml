@@ -4,6 +4,17 @@ Description: >
   sam-app-presentation
   
   Sample SAM Template for sam-app-presentation
+Params:
+  DB_USER:
+    Type: String
+  DB_HOST:
+    Type: String
+  DB_PASS:
+    Type: String
+  DB_NAME:
+    Type: String
+  LINE_USER_ID:
+    Type: String
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -48,6 +59,51 @@ Resources:
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
           PARAM1: VALUE
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  MasterUserFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: masteruser/
+      Handler: masteruser
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /masteruser
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+          LINE_USER_ID: !Ref LINE_USER_ID
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  MasterGarbageFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: mastergarbage/
+      Handler: mastergarbage
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /mastergarbage
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   # ScheduleFunction:

@@ -5,6 +5,17 @@ Description: 'sam-app-presentation
   Sample SAM Template for sam-app-presentation
 
   '
+Params:
+  DB_USER:
+    Type: String
+  DB_HOST:
+    Type: String
+  DB_PASS:
+    Type: String
+  DB_NAME:
+    Type: String
+  LINE_USER_ID:
+    Type: String
 Globals:
   Function:
     Timeout: 5
@@ -50,6 +61,62 @@ Resources:
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: HealthFunction
+  MasterUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: MasterUserFunction
+      Handler: masteruser
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /masteruser
+            Method: POST
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+          LINE_USER_ID:
+            Ref: LINE_USER_ID
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: MasterUserFunction
+  MasterGarbageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: MasterGarbageFunction
+      Handler: mastergarbage
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /mastergarbage
+            Method: POST
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: MasterGarbageFunction
 Outputs:
   HelloWorldFunction:
     Description: First Lambda Function ARN

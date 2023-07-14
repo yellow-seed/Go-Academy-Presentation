@@ -21,4 +21,24 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["HealthFunction"]
 
+[function_build_definitions.14d32222-d8de-48c3-8247-39f148591ff8]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/mastergarbage"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "mastergarbage"
+source_hash = "41fbf6413d93c04774ff753c04fb028b1a434e6c79ae147b97fdba4184ca73dd"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["MasterGarbageFunction"]
+
+[function_build_definitions.83a5fd5d-2876-4114-a8e1-2070aca929ae]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/masteruser"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "masteruser"
+source_hash = "769bd36c775563764b2c099b0f1760345b22ce0b0d36f489035eea202c6a498a"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["MasterUserFunction"]
+
 [layer_build_definitions]
