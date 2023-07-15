@@ -46,9 +46,29 @@ codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/
 runtime = "go1.x"
 architecture = "x86_64"
 handler = "garbageitem"
-source_hash = "152b9bffb90f6c8f9eb00fbc6ab390c02abace8153d82a1e117aed9b54ef2dd1"
+source_hash = "8deb8c2e54432d05a931d7f99d4b1a32759490e1a6c59e40b8f7abbcf7465332"
 manifest_hash = ""
 packagetype = "Zip"
 functions = ["GarbageItemFunction"]
+
+[function_build_definitions.024a9cfc-2661-4055-9a76-87438e31f931]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/garbageitemdetail-ja"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "garbageitemdetail-ja"
+source_hash = "b13248633a188d0e7d9858f611b89cb2f75e69d6eaf86ffbcf994b5186ab156c"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GarbageItemDetailJaFunction"]
+
+[function_build_definitions.ff0ceba9-151b-439c-9f4b-1d4a5dfe42f3]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/search"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "search"
+source_hash = "e97fe2296b8e51425cbfc0f5152f6d9136a1c1977083823b4a100b5c0bdcf80d"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["SearchFunction"]
 
 [layer_build_definitions]

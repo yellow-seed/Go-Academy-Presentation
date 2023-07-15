@@ -144,6 +144,60 @@ Resources:
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GarbageItemFunction
+  GarbageItemDetailJaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GarbageItemDetailJaFunction
+      Handler: garbageitemdetail-ja
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /garbageitemdetail-ja
+            Method: POST
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: GarbageItemDetailJaFunction
+  SearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: SearchFunction
+      Handler: search
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /search
+            Method: GET
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: SearchFunction
 Outputs:
   HelloWorldFunction:
     Description: First Lambda Function ARN

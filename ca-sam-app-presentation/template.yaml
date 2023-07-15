@@ -128,6 +128,50 @@ Resources:
           DB_NAME: !Ref DB_NAME
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
+  GarbageItemDetailJaFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: garbageitemdetail-ja/
+      Handler: garbageitemdetail-ja
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /garbageitemdetail-ja
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  SearchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: search/
+      Handler: search
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /search
+            Method: GET
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
   # ScheduleFunction:
   #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   #   Properties:
