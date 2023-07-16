@@ -6,5 +6,7 @@ CREATE TABLE IF NOT EXISTS garbage_item_details (
   translated_name VARCHAR(255),
   translated_category VARCHAR(255),
   translated_description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (garbage_item_id) REFERENCES garbage_items(id)
 );

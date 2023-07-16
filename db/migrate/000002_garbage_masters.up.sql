@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS garbage_masters (
     note VARCHAR(255), -- TODO: cautionのほうがいいかも　注意点: 現状使われていない
     remarks VARCHAR(255), -- 備考欄　注意点: 頻出
     large_fee VARCHAR(255), -- 粗大ごみ回収料金　注意点: 現状使われていない
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL DEFAULT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

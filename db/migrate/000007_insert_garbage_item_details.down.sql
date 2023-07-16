@@ -1,0 +1,1 @@
+DELETE from garbage_item_details;

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS garbage_items (
   garbage_id VARCHAR(255) UNIQUE,
   garbage_master_id INT,
   category VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP NULL DEFAULT NULL,
   FOREIGN KEY (garbage_master_id) REFERENCES garbage_masters(id)
 );
