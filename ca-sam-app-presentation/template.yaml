@@ -15,6 +15,10 @@ Params:
     Type: String
   LINE_USER_ID:
     Type: String
+  DEEPL_API_KEY:
+    Type: String
+  OPENAI_API_KEY:
+    Type: String
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -150,19 +154,91 @@ Resources:
           DB_NAME: !Ref DB_NAME
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
-  SearchFunction:
+  GarbageItemDetailEnFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: search/
-      Handler: search
+      CodeUri: garbageitemdetail-en/
+      Handler: garbageitemdetail-en
       Runtime: go1.x
+      Timeout: 900
       Architectures:
         - x86_64
       Events:
         CatchAll:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /search
+            Path: /garbageitemdetail-en
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+          DEEPL_API_KEY: !Ref DEEPL_API_KEY
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  GPTSearchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: gpt-search/
+      Handler: gpt-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /gpt-search
+            Method: GET
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+          OPENAI_API_KEY: !Ref OPENAI_API_KEY
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  BleveSearchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: bleve-search/
+      Handler: bleve-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bleve-search
+            Method: GET
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DB_USER: !Ref DB_USER
+          DB_HOST: !Ref DB_HOST
+          DB_PASS: !Ref DB_PASS
+          DB_NAME: !Ref DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
+  BlugeSearchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: bluge-search/
+      Handler: bluge-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bluge-search
             Method: GET
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:

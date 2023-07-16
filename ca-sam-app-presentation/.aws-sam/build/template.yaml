@@ -16,6 +16,10 @@ Params:
     Type: String
   LINE_USER_ID:
     Type: String
+  DEEPL_API_KEY:
+    Type: String
+  OPENAI_API_KEY:
+    Type: String
 Globals:
   Function:
     Timeout: 5
@@ -171,19 +175,80 @@ Resources:
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GarbageItemDetailJaFunction
-  SearchFunction:
+  GarbageItemDetailEnFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: SearchFunction
-      Handler: search
+      CodeUri: GarbageItemDetailEnFunction
+      Handler: garbageitemdetail-en
       Runtime: go1.x
+      Timeout: 900
       Architectures:
       - x86_64
       Events:
         CatchAll:
           Type: Api
           Properties:
-            Path: /search
+            Path: /garbageitemdetail-en
+            Method: POST
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+          DEEPL_API_KEY:
+            Ref: DEEPL_API_KEY
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: GarbageItemDetailEnFunction
+  GPTSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GPTSearchFunction
+      Handler: gpt-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /gpt-search
+            Method: GET
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+          OPENAI_API_KEY:
+            Ref: OPENAI_API_KEY
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: GPTSearchFunction
+  BleveSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: BleveSearchFunction
+      Handler: bleve-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /bleve-search
             Method: GET
       Environment:
         Variables:
@@ -197,7 +262,35 @@ Resources:
             Ref: DB_NAME
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
-      SamResourceId: SearchFunction
+      SamResourceId: BleveSearchFunction
+  BlugeSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: BlugeSearchFunction
+      Handler: bluge-search
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+      - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /bluge-search
+            Method: GET
+      Environment:
+        Variables:
+          DB_USER:
+            Ref: DB_USER
+          DB_HOST:
+            Ref: DB_HOST
+          DB_PASS:
+            Ref: DB_PASS
+          DB_NAME:
+            Ref: DB_NAME
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+    Metadata:
+      SamResourceId: BlugeSearchFunction
 Outputs:
   HelloWorldFunction:
     Description: First Lambda Function ARN

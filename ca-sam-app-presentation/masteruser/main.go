@@ -51,7 +51,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		panic(err.Error())
 	}
 
-	insert.Exec(lineId, "English")
+	insert.Exec(lineId, "en")
 
 	return events.APIGatewayProxyResponse{
 		Body:       "POST /masteruser: OK",

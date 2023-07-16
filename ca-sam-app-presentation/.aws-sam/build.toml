@@ -36,7 +36,7 @@ codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/
 runtime = "go1.x"
 architecture = "x86_64"
 handler = "masteruser"
-source_hash = "769bd36c775563764b2c099b0f1760345b22ce0b0d36f489035eea202c6a498a"
+source_hash = "f99c20ab905f94121f180cb0264d912bbdc00adbe4e158c8683e061f999ea6aa"
 manifest_hash = ""
 packagetype = "Zip"
 functions = ["MasterUserFunction"]
@@ -61,14 +61,44 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["GarbageItemDetailJaFunction"]
 
-[function_build_definitions.ff0ceba9-151b-439c-9f4b-1d4a5dfe42f3]
-codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/search"
+[function_build_definitions.9b08fbaa-99ef-4f9d-9f0c-6055d42882c4]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/bleve-search"
 runtime = "go1.x"
 architecture = "x86_64"
-handler = "search"
-source_hash = "e97fe2296b8e51425cbfc0f5152f6d9136a1c1977083823b4a100b5c0bdcf80d"
+handler = "bleve-search"
+source_hash = "ff5ed62464f0a0823167312ecebd652c5b566f8b4913df37abff950640a22ac7"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["SearchFunction"]
+functions = ["BleveSearchFunction"]
+
+[function_build_definitions.69fc58fb-1090-40c9-992b-a8e7f35dbfab]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/bluge-search"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "bluge-search"
+source_hash = "bc708a91fa1dbfc45c5dcb678623fc8f9bf42dfe0b5e537c95e626a306a52ae7"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["BlugeSearchFunction"]
+
+[function_build_definitions.93e7bbcf-da0c-4662-94e6-8f6b758ecf18]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/garbageitemdetail-en"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "garbageitemdetail-en"
+source_hash = "c238a998d38b80556263fa3dbf7564628f55b483eef643f3f2aa42797ed8a9e8"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GarbageItemDetailEnFunction"]
+
+[function_build_definitions.776d2db1-7a4b-4a59-8c4f-f3cde7f2c3ab]
+codeuri = "/Users/kazuya/Documents/workspace_go_academy/Go-Academy-Presentation/ca-sam-app-presentation/gpt-search"
+runtime = "go1.x"
+architecture = "x86_64"
+handler = "gpt-search"
+source_hash = "ce804546ea1c66a1839c4793f51e12c6114f6bce70c3480542a2410fd5ef3cb2"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GPTSearchFunction"]
 
 [layer_build_definitions]
