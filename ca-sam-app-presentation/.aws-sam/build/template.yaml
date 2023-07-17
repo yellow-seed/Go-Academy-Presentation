@@ -5,31 +5,35 @@ Description: 'sam-app-presentation
   Sample SAM Template for sam-app-presentation
 
   '
-Params:
-  DB_USER:
+Parameters:
+  DBUser:
     Type: String
-  DB_HOST:
+  DBHost:
     Type: String
-  DB_PASS:
+  DBPass:
     Type: String
-  DB_NAME:
+  DBName:
     Type: String
-  LINE_USER_ID:
+  LineUserId:
     Type: String
-  DEEPL_API_KEY:
+  DEEPLApiKey:
     Type: String
-  OPENAI_API_KEY:
+  OPENAIApiKey:
+    Type: String
+  ChannelSecret:
+    Type: String
+  ChannelToken:
     Type: String
 Globals:
   Function:
     Timeout: 5
     MemorySize: 128
 Resources:
-  HelloWorldFunction:
+  WebhookFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
-      Handler: hello-world
+      CodeUri: WebhookFunction
+      Handler: webhook
       Runtime: go1.x
       Architectures:
       - x86_64
@@ -37,14 +41,25 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /webhook
             Method: POST
       Environment:
         Variables:
-          PARAM1: VALUE
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
+          ChannelSecret:
+            Ref: ChannelSecret
+          ChannelToken:
+            Ref: ChannelToken
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
-      SamResourceId: HelloWorldFunction
+      SamResourceId: WebhookFunction
   HealthFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -81,16 +96,16 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
-          LINE_USER_ID:
-            Ref: LINE_USER_ID
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
+          LineUserId:
+            Ref: LineUserId
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: MasterUserFunction
@@ -110,14 +125,14 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: MasterGarbageFunction
@@ -137,14 +152,14 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GarbageItemFunction
@@ -164,14 +179,14 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GarbageItemDetailJaFunction
@@ -192,16 +207,16 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
-          DEEPL_API_KEY:
-            Ref: DEEPL_API_KEY
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
+          DEEPLApiKey:
+            Ref: DEEPLApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GarbageItemDetailEnFunction
@@ -222,16 +237,16 @@ Resources:
             Method: GET
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
           OPENAI_API_KEY:
-            Ref: OPENAI_API_KEY
+            Ref: OPENAIApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: GPTSearchFunction
@@ -252,14 +267,14 @@ Resources:
             Method: GET
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: BleveSearchFunction
@@ -280,21 +295,21 @@ Resources:
             Method: GET
       Environment:
         Variables:
-          DB_USER:
-            Ref: DB_USER
-          DB_HOST:
-            Ref: DB_HOST
-          DB_PASS:
-            Ref: DB_PASS
-          DB_NAME:
-            Ref: DB_NAME
+          DBUser:
+            Ref: DBUser
+          DBHost:
+            Ref: DBHost
+          DBPass:
+            Ref: DBPass
+          DBName:
+            Ref: DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
     Metadata:
       SamResourceId: BlugeSearchFunction
 Outputs:
-  HelloWorldFunction:
+  WebhookFunction:
     Description: First Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - HelloWorldFunction
+      - WebhookFunction
       - Arn

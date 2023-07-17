@@ -32,11 +32,11 @@ type GarbageMaster struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
-	lineId := os.Getenv("LINE_USER_ID")
+	user := os.Getenv("DBUser")
+	pass := os.Getenv("DBPass")
+	host := os.Getenv("DBHost")
+	name := os.Getenv("DBName")
+	lineId := os.Getenv("LineUserId")
 
 	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
 

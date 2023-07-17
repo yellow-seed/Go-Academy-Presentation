@@ -41,10 +41,10 @@ type Garbage struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
+	user := os.Getenv("DBUser")
+	pass := os.Getenv("DBPass")
+	host := os.Getenv("DBHost")
+	name := os.Getenv("DBName")
 
 	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
 
@@ -143,7 +143,7 @@ func main() {
 func translateText(text, sourceLang, targetLang string) (string, error) {
 	// 翻訳APIのURLとパラメータ
 	apiURL := "https://api.deepl.com/v2/translate"
-	authKey := os.Getenv("DEEPL_API_KEY")
+	authKey := os.Getenv("DEEPLApiKey")
 	data := url.Values{}
 	data.Set("text", text)
 	data.Set("target_lang", targetLang)

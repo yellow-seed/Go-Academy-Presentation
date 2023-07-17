@@ -4,20 +4,24 @@ Description: >
   sam-app-presentation
   
   Sample SAM Template for sam-app-presentation
-Params:
-  DB_USER:
+Parameters:
+  DBUser:
     Type: String
-  DB_HOST:
+  DBHost:
     Type: String
-  DB_PASS:
+  DBPass:
     Type: String
-  DB_NAME:
+  DBName:
     Type: String
-  LINE_USER_ID:
+  LineUserId:
     Type: String
-  DEEPL_API_KEY:
+  DEEPLApiKey:
     Type: String
-  OPENAI_API_KEY:
+  OPENAIApiKey:
+    Type: String
+  ChannelSecret:
+    Type: String
+  ChannelToken:
     Type: String
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
@@ -27,11 +31,11 @@ Globals:
     MemorySize: 128
 
 Resources:
-  HelloWorldFunction:
+  WebhookFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello-world/
-      Handler: hello-world
+      CodeUri: webhook/
+      Handler: webhook
       Runtime: go1.x
       Architectures:
         - x86_64
@@ -39,11 +43,16 @@ Resources:
         CatchAll:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
+            Path: /webhook
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          PARAM1: VALUE
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
+          ChannelSecret: !Ref ChannelSecret
+          ChannelToken: !Ref ChannelToken
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   HealthFunction:
@@ -81,11 +90,11 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
-          LINE_USER_ID: !Ref LINE_USER_ID
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
+          LineUserId: !Ref LineUserId
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   MasterGarbageFunction:
@@ -104,10 +113,10 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   GarbageItemFunction:
@@ -126,10 +135,10 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   GarbageItemDetailJaFunction:
@@ -148,10 +157,10 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   GarbageItemDetailEnFunction:
@@ -171,11 +180,11 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
-          DEEPL_API_KEY: !Ref DEEPL_API_KEY
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
+          DEEPLApiKey: !Ref DEEPLApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   GPTSearchFunction:
@@ -195,11 +204,11 @@ Resources:
             Method: GET
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
-          OPENAI_API_KEY: !Ref OPENAI_API_KEY
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
+          OPENAI_API_KEY: !Ref OPENAIApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   BleveSearchFunction:
@@ -219,10 +228,10 @@ Resources:
             Method: GET
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   BlugeSearchFunction:
@@ -242,10 +251,10 @@ Resources:
             Method: GET
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          DB_USER: !Ref DB_USER
-          DB_HOST: !Ref DB_HOST
-          DB_PASS: !Ref DB_PASS
-          DB_NAME: !Ref DB_NAME
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   # ScheduleFunction:
@@ -272,15 +281,16 @@ Resources:
   #     Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
 Outputs:
+  # TODO: デプロイ後のURLがわかるようにする
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   # HelloWorldAPI:
   #   Description: "API Gateway endpoint URL for Prod environment for First Function"
   #   Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
+  WebhookFunction:
     Description: "First Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  # HelloWorldFunctionIamRole:
+    Value: !GetAtt WebhookFunction.Arn
+  # WebhookFunctionIamRole:
   #   Description: "Implicit IAM Role created for Hello World function"
-  #   Value: !GetAtt HelloWorldFunctionRole.Arn
+  #   Value: !GetAtt WebhookFunctionRole.Arn

@@ -17,7 +17,7 @@ import (
 )
 
 type Document struct {
-	ID string
+	ID   string
 	Text string
 }
 
@@ -88,7 +88,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		if match == nil {
 			break
 		}
-		if err := match.VisitStoredFields(func(field string, value []byte) bool{
+		if err := match.VisitStoredFields(func(field string, value []byte) bool {
 			fmt.Printf("%s: %q\n", field, string(value))
 			return true
 		}); err != nil {
@@ -108,10 +108,10 @@ func main() {
 }
 
 func NewDocuments() []*bluge.Document {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
+	user := os.Getenv("DBUser")
+	pass := os.Getenv("DBPass")
+	host := os.Getenv("DBHost")
+	name := os.Getenv("DBName")
 
 	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
 	if err != nil {

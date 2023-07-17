@@ -14,10 +14,10 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
+	user := os.Getenv("DBUser")
+	pass := os.Getenv("DBPass")
+	host := os.Getenv("DBHost")
+	name := os.Getenv("DBName")
 
 	query, check := request.QueryStringParameters["query"]
 	if !check {

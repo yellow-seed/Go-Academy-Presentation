@@ -50,10 +50,10 @@ func main() {
 }
 
 func likeSearch(q string, lang string) string {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
+	user := os.Getenv("DBUser")
+	pass := os.Getenv("DBPass")
+	host := os.Getenv("DBHost")
+	name := os.Getenv("DBName")
 
 	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
 	if err != nil {
