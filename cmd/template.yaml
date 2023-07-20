@@ -208,7 +208,7 @@ Resources:
           DBHost: !Ref DBHost
           DBPass: !Ref DBPass
           DBName: !Ref DBName
-          OPENAI_API_KEY: !Ref OPENAIApiKey
+          OPENAIApiKey: !Ref OPENAIApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   BleveSearchFunction:

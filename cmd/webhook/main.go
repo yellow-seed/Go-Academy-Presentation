@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go-academy-presentation/pkg/message"
+	"go-academy-presentation/pkg/search"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -29,6 +31,12 @@ type Event struct {
 			UserId string `json:"userId"`
 		} `json:"source"`
 	}
+}
+
+type User struct {
+	Id         int    `json:"id"`
+	LineUserId string `json:"line_user_id"`
+	Language   string `json:"language"`
 }
 
 var (
@@ -103,7 +111,23 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		} else if e.Type == "unfollow" {
 			unsubscribe(userid)
 		} else if e.Type == "message" {
-			postLineMessage(userid, text)
+			var u User
+			user := os.Getenv("DBUser")
+			pass := os.Getenv("DBPass")
+			host := os.Getenv("DBHost")
+			name := os.Getenv("DBName")
+
+			db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
+			if err != nil {
+				panic(err.Error())
+			}
+			defer db.Close()
+
+			if err = db.QueryRow("SELECT id, line_user_id, language FROM users WHERE line_user_id = ?", userid).Scan(&u.Id, &u.LineUserId, &u.Language); err != nil {
+				fmt.Println(err)
+			}
+
+			postLineMessage(u, text)
 		}
 	}
 
@@ -117,21 +141,43 @@ func main() {
 	lambda.Start(handler)
 }
 
-func postLineMessage(userid string, text string) {
+func postLineMessage(u User, text string) {
 	bot, err := linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelToken"))
 	if err != nil {
 		fmt.Println(err)
 	}
 	var res string
 
-	// TODO: 特定のテキストの場合は処理を分岐する
 	if text == "switch language" {
-		res = text
+		user := os.Getenv("DBUser")
+		pass := os.Getenv("DBPass")
+		host := os.Getenv("DBHost")
+		name := os.Getenv("DBName")
+
+		db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		res = message.SwitchLanguageMessage(u.Language)
+		update, err := db.Prepare("UPDATE users SET language = ? WHERE id = ?")
+		if err != nil {
+			panic(err.Error())
+		}
+		update.Exec(u.Language, u.Id)
+		// TODO: 言語を切り替える
 	} else if text == "how to use" {
+		// TODO: 使い方を返す
 		res = text
+	} else if text == "change search mode" {
+		// TODO: 検索モードを切り替える
+		res = text
+	} else {
+		// TODO: ユーザーの検索モードで変化する
+		res = search.SqlLikeSearch(text, u.Language)
 	}
 
-	if _, err := bot.PushMessage(userid, linebot.NewTextMessage(res)).Do(); err != nil {
+	if _, err := bot.PushMessage(u.LineUserId, linebot.NewTextMessage(res)).Do(); err != nil {
 		fmt.Println(err)
 	}
 }
@@ -166,8 +212,6 @@ func subscribe(userid string) {
 		} else {
 			panic(err.Error())
 		}
-	} else {
-		// ユーザーがいる場合は何もしない
 	}
 }
 
