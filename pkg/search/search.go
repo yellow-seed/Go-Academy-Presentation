@@ -35,11 +35,37 @@ type Result struct {
 	Data    []Data `json:"data"`
 }
 
+func Search(q string, lang string, mode string) string {
+	var res string
+	fmt.Println("Search")
+	fmt.Println("-----")
+	fmt.Println(q)
+	fmt.Println(lang)
+	fmt.Println(mode)
+	fmt.Println("-----")
+	if mode == "sql" {
+		res = SqlLikeSearch(q, lang)
+	} else if mode == "gpt" {
+		res = GptSearch(q, lang)
+	} else {
+		res = SqlLikeSearch(q, lang)
+	}
+	return res
+}
+
 func SqlLikeSearch(q string, lang string) string {
 	user := os.Getenv("DBUser")
 	pass := os.Getenv("DBPass")
 	host := os.Getenv("DBHost")
 	name := os.Getenv("DBName")
+
+	fmt.Println("SqlLikeSearch")
+	fmt.Println("-----")
+	fmt.Println(user)
+	fmt.Println(pass)
+	fmt.Println(host)
+	fmt.Println(name)
+	fmt.Println("-----")
 
 	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
 	if err != nil {
@@ -47,8 +73,8 @@ func SqlLikeSearch(q string, lang string) string {
 	}
 	defer db.Close()
 
-	q = "%" + q + "%"
-	rows, err := db.Query("SELECT id, garbage_id, garbage_item_id, language_code, translated_name, translated_category, translated_description FROM garbage_item_details WHERE language_code = ? AND translated_description LIKE ?", lang, q)
+	query := "%" + q + "%"
+	rows, err := db.Query("SELECT id, garbage_id, garbage_item_id, language_code, translated_name, translated_category, translated_description FROM garbage_item_details WHERE language_code = ? AND translated_description LIKE ?", lang, query)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -97,6 +123,7 @@ func SqlLikeSearch(q string, lang string) string {
 }
 
 func GptSearch(q string, lang string) string {
+	// TODO: 対象データ数をもう少し絞ってもいいかも
 	fmt.Println("GPT Search")
 	data := CreateData(lang)
 	fmt.Println("CreateData")

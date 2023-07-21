@@ -34,9 +34,10 @@ type Event struct {
 }
 
 type User struct {
-	Id         int    `json:"id"`
-	LineUserId string `json:"line_user_id"`
-	Language   string `json:"language"`
+	Id           int    `json:"id"`
+	LineUserId   string `json:"line_user_id"`
+	LanguageCode string `json:"language_code"`
+	SearchMode   string `json:"search_mode"`
 }
 
 var (
@@ -85,10 +86,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	json.Unmarshal([]byte(res.RequestBody), &event)
 
-	fmt.Println("-----")
-	fmt.Println(event)
-	fmt.Println("-----")
-
 	if len(event.Events) == 0 {
 		fmt.Println("event is empty")
 		return events.APIGatewayProxyResponse{
@@ -123,9 +120,16 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			}
 			defer db.Close()
 
-			if err = db.QueryRow("SELECT id, line_user_id, language FROM users WHERE line_user_id = ?", userid).Scan(&u.Id, &u.LineUserId, &u.Language); err != nil {
+			if err = db.QueryRow("SELECT id, line_user_id, language_code, search_mode FROM users WHERE line_user_id = ?", userid).Scan(&u.Id, &u.LineUserId, &u.LanguageCode, &u.SearchMode); err != nil {
 				fmt.Println(err)
 			}
+
+			fmt.Println("-----")
+			fmt.Println(u.Id)
+			fmt.Println(u.LineUserId)
+			fmt.Println(u.LanguageCode)
+			fmt.Println(u.SearchMode)
+			fmt.Println("-----")
 
 			postLineMessage(u, text)
 		}
@@ -159,30 +163,52 @@ func postLineMessage(u User, text string) {
 			panic(err.Error())
 		}
 		defer db.Close()
-		res = message.SwitchLanguageMessage(u.Language)
-		update, err := db.Prepare("UPDATE users SET language = ? WHERE id = ?")
+		update, err := db.Prepare("UPDATE users SET language_code = ? WHERE id = ?")
 		if err != nil {
 			panic(err.Error())
 		}
-		update.Exec(u.Language, u.Id)
-		// TODO: 言語を切り替える
+		targetLang := changeLanguage(u.LanguageCode)
+		update.Exec(targetLang, u.Id)
+		res = message.SwitchLanguageMessage(targetLang)
 	} else if text == "how to use" {
-		// TODO: 使い方を返す
-		res = text
+		res = message.HowToUseMessage(u.LanguageCode)
 	} else if text == "change search mode" {
-		// TODO: 検索モードを切り替える
-		res = text
+		user := os.Getenv("DBUser")
+		pass := os.Getenv("DBPass")
+		host := os.Getenv("DBHost")
+		name := os.Getenv("DBName")
+
+		db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		update, err := db.Prepare("UPDATE users SET search_mode = ? WHERE id = ?")
+		if err != nil {
+			panic(err.Error())
+		}
+		targetMode := changeSearchMode(u.SearchMode)
+		update.Exec(targetMode, u.Id)
+		res = message.ChangeSearchModeMessage(u.LanguageCode, targetMode)
 	} else {
-		// TODO: ユーザーの検索モードで変化する
-		res = search.SqlLikeSearch(text, u.Language)
+		// TODO: GPT検索の場合、実行前に一度メッセージを送る
+		res = search.Search(text, u.LanguageCode, u.SearchMode)
+		// if u.SearchMode == "sql" {
+		// 	res = search.SqlLikeSearch(text, u.LanguageCode)
+		// } else {
+		// 	res = search.GptSearch(text, u.LanguageCode)
+		// }
 	}
 
 	if _, err := bot.PushMessage(u.LineUserId, linebot.NewTextMessage(res)).Do(); err != nil {
 		fmt.Println(err)
 	}
+
+	// TODO: 日本語以外の場合は追加のメッセージを送る　外国人向けのページのリンク付きのメッセージ
 }
 
 func subscribe(userid string) {
+	// TODO: 登録時専用のメッセージを投稿する
 	user := os.Getenv("DBUser")
 	pass := os.Getenv("DBPass")
 	host := os.Getenv("DBHost")
@@ -199,13 +225,13 @@ func subscribe(userid string) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// ユーザーがいない場合は登録する
-			stmt, err := db.Prepare("INSERT INTO users(line_user_id, language) VALUES (?, ?)")
+			stmt, err := db.Prepare("INSERT INTO users(line_user_id, language_code, search_mode) VALUES (?, ?, ?)")
 			if err != nil {
 				panic(err.Error())
 			}
 			defer stmt.Close()
 
-			_, err = stmt.Exec(userid, "ja")
+			_, err = stmt.Exec(userid, "ja", "sql")
 			if err != nil {
 				panic(err.Error())
 			}
@@ -217,4 +243,24 @@ func subscribe(userid string) {
 
 func unsubscribe(userid string) {
 	fmt.Println("unsubscribe")
+}
+
+func changeLanguage(lang string) string {
+	if lang == "en" {
+		return "ja"
+	} else if lang == "ja" {
+		return "en"
+	} else {
+		return "ja"
+	}
+}
+
+func changeSearchMode(mode string) string {
+	if mode == "sql" {
+		return "gpt"
+	} else if mode == "gpt" {
+		return "sql"
+	} else {
+		return "sql"
+	}
 }

@@ -37,6 +37,7 @@ Resources:
       CodeUri: webhook/
       Handler: webhook
       Runtime: go1.x
+      Timeout: 900
       Architectures:
         - x86_64
       Events:
@@ -53,6 +54,7 @@ Resources:
           DBName: !Ref DBName
           ChannelSecret: !Ref ChannelSecret
           ChannelToken: !Ref ChannelToken
+          OPENAIApiKey: !Ref OPENAIApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   HealthFunction:

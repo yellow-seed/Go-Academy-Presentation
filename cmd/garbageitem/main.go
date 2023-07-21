@@ -10,12 +10,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type User struct {
-	Id         int
-	LineUserId string
-	Language   string
-}
-
 type GarbageMaster struct {
 	Id         int
 	PublicCode string

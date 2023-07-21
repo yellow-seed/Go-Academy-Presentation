@@ -45,13 +45,13 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	defer db.Close()
 
-	insert, err := db.Prepare("INSERT INTO users(line_user_id, language) VALUES (?, ?)")
+	insert, err := db.Prepare("INSERT INTO users(line_user_id, language_code, search_mode) VALUES (?, ?, ?)")
 
 	if err != nil {
 		panic(err.Error())
 	}
 
-	insert.Exec(lineId, "en")
+	insert.Exec(lineId, "ja", "sql")
 
 	return events.APIGatewayProxyResponse{
 		Body:       "POST /masteruser: OK",
