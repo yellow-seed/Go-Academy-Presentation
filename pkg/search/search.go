@@ -53,6 +53,7 @@ func Search(q string, lang string, mode string) string {
 	return res
 }
 
+// TODO: 該当データの名前の前に・をつける
 func SqlLikeSearch(q string, lang string) string {
 	user := os.Getenv("DBUser")
 	pass := os.Getenv("DBPass")
@@ -122,8 +123,10 @@ func SqlLikeSearch(q string, lang string) string {
 	return t
 }
 
+// TODO: 該当データの名前の前に・をつける
 func GptSearch(q string, lang string) string {
 	// TODO: 対象データ数をもう少し絞ってもいいかも
+	// TODO: ハルシネーションは後半に集中しているので後半はある程度切り捨てる
 	fmt.Println("GPT Search")
 	data := CreateData(lang)
 	fmt.Println("CreateData")
