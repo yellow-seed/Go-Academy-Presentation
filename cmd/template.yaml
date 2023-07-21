@@ -189,11 +189,11 @@ Resources:
           DEEPLApiKey: !Ref DEEPLApiKey
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
-  GPTSearchFunction:
+  SearchFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: gpt-search/
-      Handler: gpt-search
+      CodeUri: search/
+      Handler: search
       Runtime: go1.x
       Timeout: 900
       Architectures:
@@ -202,7 +202,7 @@ Resources:
         CatchAll:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /gpt-search
+            Path: /search
             Method: GET
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
@@ -211,52 +211,6 @@ Resources:
           DBPass: !Ref DBPass
           DBName: !Ref DBName
           OPENAIApiKey: !Ref OPENAIApiKey
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
-
-  BleveSearchFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: bleve-search/
-      Handler: bleve-search
-      Runtime: go1.x
-      Timeout: 900
-      Architectures:
-        - x86_64
-      Events:
-        CatchAll:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /bleve-search
-            Method: GET
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          DBUser: !Ref DBUser
-          DBHost: !Ref DBHost
-          DBPass: !Ref DBPass
-          DBName: !Ref DBName
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
-
-  BlugeSearchFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: bluge-search/
-      Handler: bluge-search
-      Runtime: go1.x
-      Timeout: 900
-      Architectures:
-        - x86_64
-      Events:
-        CatchAll:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /bluge-search
-            Method: GET
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          DBUser: !Ref DBUser
-          DBHost: !Ref DBHost
-          DBPass: !Ref DBPass
-          DBName: !Ref DBName
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
   # ScheduleFunction:
