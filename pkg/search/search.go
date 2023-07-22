@@ -2,9 +2,9 @@ package search
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
+	"go-academy-presentation/pkg/db"
 	"os"
 	"strconv"
 	"sync"
@@ -13,16 +13,6 @@ import (
 	"github.com/tmc/langchaingo/llms/openai"
 	"github.com/tmc/langchaingo/schema"
 )
-
-type GarbageItemDetail struct {
-	Id                    int
-	GarbageId             string
-	GarbageItemId         int
-	LanguageCode          string
-	TranslatedName        string
-	TranslatedCategory    string
-	TranslatedDescription string
-}
 
 type Data struct {
 	Id          string `json:"id"`
@@ -53,81 +43,35 @@ func Search(q string, lang string, mode string) string {
 	return res
 }
 
-// TODO: 該当データの名前の前に・をつける
 func SqlLikeSearch(q string, lang string) string {
-	user := os.Getenv("DBUser")
-	pass := os.Getenv("DBPass")
-	host := os.Getenv("DBHost")
-	name := os.Getenv("DBName")
-
-	fmt.Println("SqlLikeSearch")
-	fmt.Println("-----")
-	fmt.Println(user)
-	fmt.Println(pass)
-	fmt.Println(host)
-	fmt.Println(name)
-	fmt.Println("-----")
-
-	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
+	db, err := db.InitDB()
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
 	query := "%" + q + "%"
-	rows, err := db.Query("SELECT id, garbage_id, garbage_item_id, language_code, translated_name, translated_category, translated_description FROM garbage_item_details WHERE language_code = ? AND translated_description LIKE ?", lang, query)
+	rows, err := db.Query("SELECT id, translated_name, translated_description FROM garbage_item_details WHERE language_code = ? AND translated_description LIKE ?", lang, query)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
 
-	var details []GarbageItemDetail
+	var resultData []Data
 	for rows.Next() {
-		var detail GarbageItemDetail
-		if err := rows.Scan(&detail.Id, &detail.GarbageId, &detail.GarbageItemId, &detail.LanguageCode, &detail.TranslatedName, &detail.TranslatedCategory, &detail.TranslatedDescription); err != nil {
+		var data Data
+		if err := rows.Scan(&data.Id, &data.Name, &data.Description); err != nil {
 			panic(err.Error())
 		}
-		details = append(details, detail)
+		resultData = append(resultData, data)
 	}
-	var t string
 
-	if len(details) > 24 {
-		if lang == "en" {
-			t = "There are more than 25 search results. Show some.\n"
-		} else {
-			t = "25件以上の検索結果があります。一部を表示します。\n"
-		}
-
-		for i := 0; i < 25; i++ {
-			t += details[i].TranslatedName + "\n"
-		}
-	} else if len(details) >= 10 {
-		if lang == "en" {
-			t = "There are " + strconv.Itoa(len(details)) + " search results.\n"
-		} else {
-			t = strconv.Itoa(len(details)) + "件の検索結果があります。\n"
-		}
-		for i := 0; i < len(details); i++ {
-			t += details[i].TranslatedName + "\n"
-		}
-	} else {
-		if lang == "en" {
-			t = "There are " + strconv.Itoa(len(details)) + " search results.\n"
-		} else {
-			t = strconv.Itoa(len(details)) + "件の検索結果があります。\n"
-		}
-		for i := 0; i < len(details); i++ {
-			t += details[i].TranslatedDescription + "\n"
-		}
-	}
+	t := ResultText(resultData, q, lang)
 	return t
 }
 
-// TODO: 該当データの名前の前に・をつける
+// TODO: エラーになった場合にエラーメッセージを表示させたい
 func GptSearch(q string, lang string) string {
-	// TODO: 対象データ数をもう少し絞ってもいいかも
-	// TODO: ハルシネーションは後半に集中しているので後半はある程度切り捨てる
-	// TODO: あるいは元データともう一度照らし合わせて、元データにないものは切り捨てる
 	fmt.Println("GPT Search")
 	data := CreateData(lang)
 	fmt.Println("CreateData")
@@ -169,53 +113,62 @@ func GptSearch(q string, lang string) string {
 
 	wg.Wait()
 
-	var t string
+	matchedData := []Data{}
 
-	for _, d := range resultData {
+	for _, d := range data {
+		for _, rd := range resultData {
+			if d.Id == rd.Id && d.Name == rd.Name {
+				matchedData = append(matchedData, d)
+			}
+		}
+	}
+
+	for _, d := range matchedData {
 		fmt.Println("=====")
 		fmt.Println(d.Id)
 		fmt.Println(d.Description)
 	}
 
+	t := ResultText(matchedData, q, lang)
+	return t
+}
+
+func ResultText(resultData []Data, query string, lang string) string {
+	var t string
 	if len(resultData) > 24 {
 		if lang == "en" {
-			t = "There are more than 25 search results. Show some.\n"
+			t = "There are more than 25 search results about " + query + ". Show some.\n"
 		} else {
-			t = "25件以上の検索結果があります。一部を表示します。\n"
+			t = query + "について25件以上の検索結果があります。一部を表示します。\n"
 		}
 
 		for i := 0; i < 25; i++ {
-			t += resultData[i].Name + "\n"
+			t += "・" + resultData[i].Name + "\n"
 		}
 	} else if len(resultData) >= 10 {
 		if lang == "en" {
-			t = "There are " + strconv.Itoa(len(resultData)) + " search results.\n"
+			t = "There are " + strconv.Itoa(len(resultData)) + " search results about " + query + ".\n"
 		} else {
-			t = strconv.Itoa(len(resultData)) + "件の検索結果があります。\n"
+			t = query + "について" + strconv.Itoa(len(resultData)) + "件の検索結果があります。\n"
 		}
 		for i := 0; i < len(resultData); i++ {
-			t += resultData[i].Description + "\n"
+			t += "・" + resultData[i].Description + "\n"
 		}
 	} else {
 		if lang == "en" {
-			t = "There are " + strconv.Itoa(len(resultData)) + " search results.\n"
+			t = "There are " + strconv.Itoa(len(resultData)) + " search results about " + query + ".\n"
 		} else {
-			t = strconv.Itoa(len(resultData)) + "件の検索結果があります。\n"
+			t = query + "について" + strconv.Itoa(len(resultData)) + "件の検索結果があります。\n"
 		}
 		for i := 0; i < len(resultData); i++ {
-			t += resultData[i].Description + "\n"
+			t += "・" + resultData[i].Description + "\n"
 		}
 	}
 	return t
 }
 
 func CreateData(lang string) []Data {
-	user := os.Getenv("DBUser")
-	pass := os.Getenv("DBPass")
-	host := os.Getenv("DBHost")
-	name := os.Getenv("DBName")
-
-	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
+	db, err := db.InitDB()
 	if err != nil {
 		panic(err.Error())
 	}

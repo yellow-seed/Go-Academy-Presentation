@@ -13,11 +13,36 @@ func SwitchLanguageMessage(targetLang string) string {
 func HowToUseMessage(lang string) string {
 	var res string
 	if lang == "ja" {
-		res = "世田谷区のごみの分類方法を提供するbotです。分別方法を知りたいごみの名前を送信してください。文字一致検索モードとChatGPTを用いた類似単語検索モードがあります。検索モードの切り替えはメニューのボタンからおこなえます。"
+		res = `
+このbotは世田谷区のごみの分別に回答するbotです。
+分別方法を知りたいゴミの名前を入力することで分別方法の說明が返信されます。
+
+🔎マークをおすことで検索方法を切り替えることができます。
+検索方法は一致する文字を検索するモードとChatGPTが関連キーワードを検索するモードの2種類です。
+
+現在、日本語と英語での質問に対応しています。
+		`
 	} else if lang == "en" {
-		res = "This is a bot that provides a method of sorting garbage in Setagaya Ward. Please send us the name of the garbage you want to know how to separate. There are character matching search mode and similar word search mode using ChatGPT. You can switch the search mode from the button on the menu."
+		res = `
+This bot is a bot that responds to garbage separation in Setagaya Ward.
+By entering the name of the garbage you want to know the separation method, the explanation of the separation method will be sent back.
+
+You can switch the search method by pressing the 🔎 mark.
+There are two types of search methods: a mode that searches for matching characters and a mode that ChatGPT searches for related keywords.
+
+Currently, we are responding to questions in Japanese and English.
+		`
 	}
 	return res
+}
+
+func InitialStateMessage() string {
+	return `
+現在
+・言語: 日本語
+・検索モード: 文字一致検索
+です。
+	`
 }
 
 func ChangeSearchModeMessage(lang string, targetSearchMode string) string {
@@ -57,11 +82,55 @@ func SQLSearchModeName(lang string) string {
 func GPTSearchModeName(lang string) string {
 	var res string
 	if lang == "ja" {
-		res = "類似単語検索"
+		res = "ChatGPTによる類似単語検索"
 	} else if lang == "en" {
-		res = "Similar word search"
+		res = "Similar word search powered by ChatGPT"
 	} else {
-		res = "類似単語検索"
+		res = "ChatGPTによる類似単語検索"
 	}
 	return res
+}
+
+func GPTSearchCautionMessage(lang string) string {
+	if lang == "ja" {
+		return `
+ChatGPTによる検索はベータ機能です。
+検索には少し時間がかかり、精度にも注意が必要です。
+		`
+	} else {
+		return `
+Search by ChatGPT is a beta feature.
+The search takes some time and requires precision.
+		`
+	}
+}
+
+func ForeignerSupportMessage(lang string) string {
+	if lang == "ja" {
+		return `
+正確な分類を知りたい場合は次のリンク先のページから確認してください。
+https://www.city.setagaya.lg.jp/mokuji/kurashi/004/001/d00190086.html
+		`
+	} else {
+		return `
+If you want to know the exact classification, please check from the following linked page.
+https://www.city.setagaya.lg.jp/mokuji/kurashi/004/013/index.html
+		`
+	}
+}
+
+func ErrorMessage(lang string) string {
+	if lang == "ja" {
+		return `
+エラーが発生しました。改めてメッセージを送信してください。
+		`
+	}  else if lang == "en" {
+		return `
+An error has occurred. Please send a message again.
+		`
+	} else {
+		return `
+エラーが発生しました。改めてメッセージを送信してください。
+		`
+	}
 }

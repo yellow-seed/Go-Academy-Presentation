@@ -7,6 +7,7 @@ import (
 )
 
 type GarbageItemDetail struct {
+	Id                    int
 	GarbageId             string
 	GarbageItemId         int
 	LanguageCode          string
