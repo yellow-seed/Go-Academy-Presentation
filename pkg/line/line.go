@@ -37,7 +37,7 @@ func SendMessage(userid string, text string) {
 	}
 
 	if text == "switch language" {
-		targetLang := changeLanguage(u.LanguageCode)
+		targetLang := ChangeLanguage(u.LanguageCode)
 		u.LanguageCode = targetLang
 
 		err = user.Update(db, u)
@@ -53,7 +53,7 @@ func SendMessage(userid string, text string) {
 			fmt.Println(err)
 		}
 	} else if text == "change search mode" {
-		targetMode := changeSearchMode(u.SearchMode)
+		targetMode := ChangeSearchMode(u.SearchMode)
 		u.SearchMode = targetMode
 
 		err = user.Update(db, u)
@@ -149,7 +149,7 @@ func Unsubscribe(userid string) {
 	}
 }
 
-func changeLanguage(lang string) string {
+func ChangeLanguage(lang string) string {
 	if lang == "en" {
 		return "ja"
 	} else if lang == "ja" {
@@ -159,7 +159,7 @@ func changeLanguage(lang string) string {
 	}
 }
 
-func changeSearchMode(mode string) string {
+func ChangeSearchMode(mode string) string {
 	if mode == "sql" {
 		return "gpt"
 	} else if mode == "gpt" {

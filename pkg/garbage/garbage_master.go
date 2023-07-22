@@ -119,36 +119,27 @@ func CreateGm(db *sql.DB, gm *GarbageMaster) (sql.Result, error) {
 	return result, nil
 }
 
-func Read(db *sql.DB, id int) (*GarbageMaster, error) {
-	gm := &GarbageMaster{}
-	err := db.QueryRow("SELECT id, public_code, garbage_id, public_name, district, item, item_kana, item_eng, classify, note, remarks, large_fee FROM garbage_masters WHERE id = ?", id).Scan(&gm.Id, &gm.PublicCode, &gm.GarbageId, &gm.PublicName, &gm.District, &gm.Item, &gm.ItemKana, &gm.ItemEng, &gm.Classify, &gm.Note, &gm.Remarks, &gm.LargeFee)
-	if err != nil {
-		return nil, err
-	}
-	return gm, nil
-}
+// func Read(db *sql.DB, id int) (*GarbageMaster, error) {
+// 	gm := &GarbageMaster{}
+// 	err := db.QueryRow("SELECT id, public_code, garbage_id, public_name, district, item, item_kana, item_eng, classify, note, remarks, large_fee FROM garbage_masters WHERE id = ?", id).Scan(&gm.Id, &gm.PublicCode, &gm.GarbageId, &gm.PublicName, &gm.District, &gm.Item, &gm.ItemKana, &gm.ItemEng, &gm.Classify, &gm.Note, &gm.Remarks, &gm.LargeFee)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return gm, nil
+// }
 
-func ReadByPublicCode(db *sql.DB, publicCode string) (*GarbageMaster, error) {
-	gm := &GarbageMaster{}
-	err := db.QueryRow("SELECT id, public_code, garbage_id, public_name, district, item, item_kana, item_eng, classify, note, remarks, large_fee FROM garbage_masters WHERE public_code = ?", publicCode).Scan(&gm.Id, &gm.PublicCode, &gm.GarbageId, &gm.PublicName, &gm.District, &gm.Item, &gm.ItemKana, &gm.ItemEng, &gm.Classify, &gm.Note, &gm.Remarks, &gm.LargeFee)
-	if err != nil {
-		return nil, err
-	}
-	return gm, nil
-}
+// func Update(db *sql.DB, gm *GarbageMaster) error {
+// 	_, err := db.Exec("UPDATE garbage_masters SET public_code = ?, garbage_id = ?, public_name = ?, district = ?, item = ?, item_kana = ?, item_eng = ?, classify = ?, note = ?, remarks = ?, large_fee = ? WHERE id = ?", gm.PublicCode, gm.GarbageId, gm.PublicName, gm.District, gm.Item, gm.ItemKana, gm.ItemEng, gm.Classify, gm.Note, gm.Remarks, gm.LargeFee, gm.Id)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
-func Update(db *sql.DB, gm *GarbageMaster) error {
-	_, err := db.Exec("UPDATE garbage_masters SET public_code = ?, garbage_id = ?, public_name = ?, district = ?, item = ?, item_kana = ?, item_eng = ?, classify = ?, note = ?, remarks = ?, large_fee = ? WHERE id = ?", gm.PublicCode, gm.GarbageId, gm.PublicName, gm.District, gm.Item, gm.ItemKana, gm.ItemEng, gm.Classify, gm.Note, gm.Remarks, gm.LargeFee, gm.Id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func Delete(db *sql.DB, id int) error {
-	_, err := db.Exec("DELETE FROM garbage_masters WHERE id = ?", id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func Delete(db *sql.DB, id int) error {
+// 	_, err := db.Exec("DELETE FROM garbage_masters WHERE id = ?", id)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }

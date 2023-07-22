@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TODO: 正常系異常系両方書く
 func TestSwitchLanguageMessage(t *testing.T) {
 	want := "言語を日本語に変更しました。"
 	got := SwitchLanguageMessage("ja")
