@@ -36,7 +36,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	if !queryCheck {
 		return events.APIGatewayProxyResponse{
-			Body:       "GET /gpt-search: NG",
+			Body:       "GET /search: NG",
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
