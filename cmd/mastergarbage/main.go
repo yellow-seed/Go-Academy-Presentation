@@ -1,45 +1,27 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/csv"
+	"go-academy-presentation/pkg/db"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type GarbageMaster struct {
-	Id         int
-	PublicCode string
-	GarbageId  string
-	PublicName string
-	District   string
-	Item       string
-	ItemKana   string
-	ItemEng    string
-	Classify   string
-	Note       string
-	Remarks    string
-	LargeFee   string
-}
+const (
+	url = "https://www.opendata.metro.tokyo.lg.jp/setagaya/131121_setagayaku_garbage_separate.csv"
+)
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	user := os.Getenv("DBUser")
-	pass := os.Getenv("DBPass")
-	host := os.Getenv("DBHost")
-	name := os.Getenv("DBName")
-
-	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
-
+	db, err := db.InitDB()
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
-
-	url := "https://www.opendata.metro.tokyo.lg.jp/setagaya/131121_setagayaku_garbage_separate.csv"
 
 	res, err := http.Get(url)
 	if err != nil {
@@ -80,7 +62,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	tx.Commit()
 
 	// delete download file
-	os.Remove("131121_setagayaku_garbage_separate.csv")
+	os.Remove(path.Base(url))
 
 	return events.APIGatewayProxyResponse{
 		Body:       "POST /mastergarbage: OK",

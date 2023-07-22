@@ -127,6 +127,7 @@ func SqlLikeSearch(q string, lang string) string {
 func GptSearch(q string, lang string) string {
 	// TODO: 対象データ数をもう少し絞ってもいいかも
 	// TODO: ハルシネーションは後半に集中しているので後半はある程度切り捨てる
+	// TODO: あるいは元データともう一度照らし合わせて、元データにないものは切り捨てる
 	fmt.Println("GPT Search")
 	data := CreateData(lang)
 	fmt.Println("CreateData")

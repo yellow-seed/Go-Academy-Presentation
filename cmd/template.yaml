@@ -99,6 +99,30 @@ Resources:
           LineUserId: !Ref LineUserId
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
 
+  MigrateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: migrate/
+      Handler: migrate
+      Runtime: go1.x
+      Timeout: 900
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /migrate
+            Method: POST
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DBUser: !Ref DBUser
+          DBHost: !Ref DBHost
+          DBPass: !Ref DBPass
+          DBName: !Ref DBName
+          DEEPLApiKey: !Ref DEEPLApiKey
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+
   MasterGarbageFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:

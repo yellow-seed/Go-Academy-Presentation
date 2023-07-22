@@ -10,21 +10,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type GarbageMaster struct {
-	Id         int
-	PublicCode string
-	GarbageId  string
-	PublicName string
-	District   string
-	Item       string
-	ItemKana   string
-	ItemEng    string
-	Classify   string
-	Note       string
-	Remarks    string
-	LargeFee   string
-}
-
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	user := os.Getenv("DBUser")
 	pass := os.Getenv("DBPass")

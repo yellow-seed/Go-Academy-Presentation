@@ -1,38 +1,16 @@
 package main
 
 import (
-	"database/sql"
+	"go-academy-presentation/pkg/db"
 	"net/http"
-	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type GarbageMaster struct {
-	Id         int
-	PublicCode string
-	GarbageId  string
-	PublicName string
-	District   string
-	Item       string
-	ItemKana   string
-	ItemEng    string
-	Classify   string
-	Note       string
-	Remarks    string
-	LargeFee   string
-}
-
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	user := os.Getenv("DBUser")
-	pass := os.Getenv("DBPass")
-	host := os.Getenv("DBHost")
-	name := os.Getenv("DBName")
-
-	db, err := sql.Open("mysql", user+":"+pass+"@("+host+":3306)/"+name+"?parseTime=true")
-
+	db, err := db.InitDB()
 	if err != nil {
 		panic(err.Error())
 	}
