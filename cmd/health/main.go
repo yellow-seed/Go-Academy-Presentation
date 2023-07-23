@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"go-academy-presentation/pkg/response"
 	"io"
 	"net/http"
 
@@ -41,7 +42,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Hello, %v", string(ip)),
+		Body:       response.ResponseBody(fmt.Sprintf("Hello, %v", string(ip))),
 		StatusCode: 200,
 	}, nil
 }

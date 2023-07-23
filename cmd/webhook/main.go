@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-academy-presentation/pkg/line"
+	"go-academy-presentation/pkg/response"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -102,7 +103,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       "POST /webhook: OK",
+		Body:       response.ResponseBody("POST /webhook: OK"),
 		StatusCode: 200,
 	}, nil
 }

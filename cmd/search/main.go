@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-academy-presentation/pkg/response"
 	"go-academy-presentation/pkg/search"
 	"net/http"
 
@@ -32,7 +33,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	result := search.Search(q, l, m)
 
 	return events.APIGatewayProxyResponse{
-		Body:       "result=\n" + result + "\n: OK",
+		Body:       response.ResponseBody("result=\n" + result),
 		StatusCode: 200,
 	}, nil
 }

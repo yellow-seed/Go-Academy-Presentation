@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-academy-presentation/pkg/garbage"
+	"go-academy-presentation/pkg/response"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -13,7 +14,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	garbage.Migrate()
 
 	return events.APIGatewayProxyResponse{
-		Body:       "POST /migrate: OK",
+		Body:       response.ResponseBody("POST /migrate: OK"),
 		StatusCode: http.StatusOK,
 	}, nil
 }
